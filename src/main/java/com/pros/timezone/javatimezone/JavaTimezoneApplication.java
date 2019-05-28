@@ -31,13 +31,16 @@ public class JavaTimezoneApplication {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Raw: ")
-				.append(rawOffset)
-				.append(", DST: ")
-				.append(dayLightSavingOffset)
-				.append(" ")
-				.append(range)
-				.append(" ")
-				.append(tz.getID());
+			.append(rawOffset)
+			.append(", DST: ")
+			.append(dayLightSavingOffset);
+		if (!range.isEmpty())
+		{
+			sb.append(" (")
+			.append(range)
+			.append(") ");
+		}
+		sb.append(tz.getID());
 
 		return sb.toString();
 	}
@@ -51,21 +54,21 @@ public class JavaTimezoneApplication {
 			DateTimeFormatter format = DateTimeFormat.mediumDateTime();
 
 			long current = System.currentTimeMillis();
-			for (int i = 0; i < 2; i++)
+			long next = zone.nextTransition(current);
+			if (current != next)
 			{
-				long next = zone.nextTransition(current);
-				if (current == next)
-				{
-					break;
-				}
-				String str = !zone.isStandardOffset(next) ? " [starting] " : " [ended] ";
+				String str = !zone.isStandardOffset(next) ? " [starting] " : " [ended]";
 				sb.append(format.print(next) + str + " - ");
+
 				current = next;
+				next = zone.nextTransition(current);
+				str = !zone.isStandardOffset(next) ? " [starting]" : " [ended]";
+				sb.append(format.print(next) + str);
 			}
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error: " + e.getMessage());
+			// System.out.println("Error: " + e.getMessage());
 		}
 		return sb.toString();
 	}
