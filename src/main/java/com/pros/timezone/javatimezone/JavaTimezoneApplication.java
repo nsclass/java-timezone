@@ -21,20 +21,49 @@ public class JavaTimezoneApplication {
 
 	private static String displayTimeZone(TimeZone tz) {
 
-		long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
-				- TimeUnit.HOURS.toMinutes(hours);
-		// avoid -4:-30 issue
-		minutes = Math.abs(minutes);
+		TimeOffset rawOffset = buildOffset(tz.getRawOffset());
+		TimeOffset dayLightSavingOffset = buildOffset(tz.getRawOffset() + tz.getDSTSavings());
+		StringBuilder sb = new StringBuilder();
+		sb.append("Raw: ")
+				.append(rawOffset)
+				.append(", DST: ")
+				.append(dayLightSavingOffset)
+				.append(" ")
+				.append(tz.getID());
 
-		String result = "";
-		if (hours > 0) {
-			result = String.format("(GMT+%d:%02d) %s", hours, minutes, tz.getID());
-		} else {
-			result = String.format("(GMT%d:%02d) %s", hours, minutes, tz.getID());
+		return sb.toString();
+	}
+
+	private static TimeOffset buildOffset(int offsetInMilli)
+	{
+		return new TimeOffset(offsetInMilli);
+	}
+
+	private static class TimeOffset
+	{
+		private long hours;
+		private long minutes;
+
+		public TimeOffset(int offsetInMilli)
+		{
+			hours = TimeUnit.MILLISECONDS.toHours(offsetInMilli);
+			minutes = TimeUnit.MILLISECONDS.toMinutes(offsetInMilli)
+					- TimeUnit.HOURS.toMinutes(hours);
+			// avoid -4:-30 issue
+			minutes = Math.abs(minutes);
 		}
 
-		return result;
-
+		@Override
+		public String toString()
+		{
+			if (hours > 0)
+			{
+				return String.format("GMT+%d:%02d", hours, minutes);
+			}
+			else
+			{
+				return String.format("GMT%d:%02d", hours, minutes);
+			}
+		}
 	}
 }
