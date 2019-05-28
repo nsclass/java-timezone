@@ -31,16 +31,17 @@ public class JavaTimezoneApplication {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Raw: ")
-			.append(rawOffset)
-			.append(", DST: ")
-			.append(dayLightSavingOffset);
+                .append(rawOffset)
+                .append(", DST: ")
+                .append(dayLightSavingOffset);
 		if (!range.isEmpty())
 		{
 			sb.append(" (")
-			.append(range)
-			.append(") ");
+                    .append(range)
+                    .append(")");
 		}
-		sb.append(tz.getID());
+		sb.append(" ")
+                .append(tz.getID());
 
 		return sb.toString();
 	}
