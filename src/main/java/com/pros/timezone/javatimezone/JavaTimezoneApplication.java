@@ -58,12 +58,12 @@ public class JavaTimezoneApplication {
 			long next = zone.nextTransition(current);
 			if (current != next)
 			{
-				String str = !zone.isStandardOffset(next) ? " [starting] " : " [ended]";
+				String str = !zone.isStandardOffset(next) ? " [starting]" : " [ending]";
 				sb.append(format.print(next) + str + " - ");
 
 				current = next;
 				next = zone.nextTransition(current);
-				str = !zone.isStandardOffset(next) ? " [starting]" : " [ended]";
+				str = !zone.isStandardOffset(next) ? " [starting]" : " [ending]";
 				sb.append(format.print(next) + str);
 			}
 		}
