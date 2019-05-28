@@ -1,5 +1,8 @@
 package com.pros.timezone.javatimezone;
 
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.TimeZone;
@@ -23,16 +26,50 @@ public class JavaTimezoneApplication {
 
 		TimeOffset rawOffset = buildOffset(tz.getRawOffset());
 		TimeOffset dayLightSavingOffset = buildOffset(tz.getRawOffset() + tz.getDSTSavings());
+
+		String range = daylightSavingRange(tz.getID());
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Raw: ")
 				.append(rawOffset)
 				.append(", DST: ")
 				.append(dayLightSavingOffset)
 				.append(" ")
+				.append(range)
+				.append(" ")
 				.append(tz.getID());
 
 		return sb.toString();
 	}
+
+	private static String daylightSavingRange(String tzId)
+	{
+		StringBuilder sb = new StringBuilder();
+		try
+		{
+			DateTimeZone zone = DateTimeZone.forID(tzId);
+			DateTimeFormatter format = DateTimeFormat.mediumDateTime();
+
+			long current = System.currentTimeMillis();
+			for (int i = 0; i < 2; i++)
+			{
+				long next = zone.nextTransition(current);
+				if (current == next)
+				{
+					break;
+				}
+				String str = !zone.isStandardOffset(next) ? " [starting] " : " [ended] ";
+				sb.append(format.print(next) + str + " - ");
+				current = next;
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error: " + e.getMessage());
+		}
+		return sb.toString();
+	}
+
 
 	private static TimeOffset buildOffset(int offsetInMilli)
 	{
