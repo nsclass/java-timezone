@@ -1,4 +1,4 @@
-package com.pros.timezone.javatimezone;
+package com.ns.timezone.javatimezone;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -45,7 +45,7 @@ public class JavaTimezoneApplication {
 		public String toString()
 		{
 			String str = begin ? "starting" : "ending";
-			return date + "[" + str + "]";
+			return date + " [" + str + "]";
 		}
 	}
 

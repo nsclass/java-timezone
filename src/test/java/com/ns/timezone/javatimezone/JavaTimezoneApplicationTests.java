@@ -1,4 +1,4 @@
-package com.pros.timezone.javatimezone;
+package com.ns.timezone.javatimezone;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
