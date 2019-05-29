@@ -5,8 +5,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -15,15 +18,40 @@ import java.util.stream.Collectors;
 /**
  * @author nseo
  */
-public class Timezone
+@Service
+public class TimezoneService
 {
-    private static Logger log = LoggerFactory.getLogger(Timezone.class);
+    private static Logger log = LoggerFactory.getLogger(TimezoneService.class);
 
-    public static List<TimezoneDisplayInfo> buildTimezoneDisplayInfoList()
+    private Map<String, TimezoneDisplayInfo> displayInfoMap;
+
+    public Flux<TimezoneDisplayInfo> getAllTimezoneDisplay()
     {
-        String[] ids = TimeZone.getAvailableIDs();
-        return Arrays.stream(ids).map(id -> createTimezoneDisplayInfo(TimeZone.getTimeZone(id)))
-                .collect(Collectors.toList());
+        if (displayInfoMap == null)
+        {
+            String[] ids = TimeZone.getAvailableIDs();
+            displayInfoMap = Arrays.stream(ids).map(id -> createTimezoneDisplayInfo(TimeZone.getTimeZone(id)))
+                    .collect(Collectors.toMap(TimezoneDisplayInfo::getZoneId, item -> item));
+        }
+
+        return Flux.fromIterable(getOrBuildTimezoneMap().values());
+    }
+
+    public Flux<String> getAllTimezoneIds()
+    {
+        return Flux.fromIterable(getOrBuildTimezoneMap().keySet());
+    }
+
+    private Map<String, TimezoneDisplayInfo> getOrBuildTimezoneMap()
+    {
+        if (displayInfoMap == null)
+        {
+            String[] ids = TimeZone.getAvailableIDs();
+            displayInfoMap = Arrays.stream(ids).map(id -> createTimezoneDisplayInfo(TimeZone.getTimeZone(id)))
+                    .collect(Collectors.toMap(TimezoneDisplayInfo::getZoneId, item -> item));
+        }
+
+        return displayInfoMap;
     }
 
     private static class DaylightSavingItem

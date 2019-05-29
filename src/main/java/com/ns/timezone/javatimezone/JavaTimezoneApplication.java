@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JavaTimezoneApplication {
 
 	public static void main(String[] args) {
-//		Timezone.buildTimezoneDisplayInfoList()
+//		Timezone.getAllTimezoneDisplay()
 //				.forEach(System.out::println);
 		SpringApplication.run(JavaTimezoneApplication.class, args);
 	}

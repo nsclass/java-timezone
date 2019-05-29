@@ -16,12 +16,24 @@ import reactor.core.publisher.Flux;
 @Configuration
 public class AppRouterSpringConfiguration
 {
+    private final TimezoneService timezoneService;
+
+    public AppRouterSpringConfiguration(TimezoneService timezoneService)
+    {
+        this.timezoneService = timezoneService;
+    }
+
     @Bean
     public RouterFunction<ServerResponse> getAllTimezoneInfo() {
-        return RouterFunctions.route(RequestPredicates.GET("/timezone"), request ->
-        {
-            Flux<Timezone.TimezoneDisplayInfo> flux = Flux.fromIterable(Timezone.buildTimezoneDisplayInfoList());
-            return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromPublisher(flux, Timezone.TimezoneDisplayInfo.class));
-        });
+            return RouterFunctions.route(RequestPredicates.GET("/timezone"), request ->
+            {
+                Flux<TimezoneService.TimezoneDisplayInfo> flux = timezoneService.getAllTimezoneDisplay();
+                return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromPublisher(flux, TimezoneService.TimezoneDisplayInfo.class));
+            })
+            .andRoute(RequestPredicates.GET("/timezoneIds"), request ->
+            {
+                Flux<String> flux = timezoneService.getAllTimezoneIds();
+                return ServerResponse.ok().body(BodyInserters.fromPublisher(flux, String.class));
+            });
     }
 }
