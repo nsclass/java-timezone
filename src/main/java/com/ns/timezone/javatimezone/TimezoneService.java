@@ -32,6 +32,9 @@ public class TimezoneService
             String[] ids = TimeZone.getAvailableIDs();
             displayInfoMap = Arrays.stream(ids).map(id -> createTimezoneDisplayInfo(TimeZone.getTimeZone(id)))
                     .collect(Collectors.toMap(TimezoneDisplayInfo::getZoneId, item -> item));
+
+            displayInfoMap.values().stream()
+                    .forEach(System.out::println);
         }
 
         return Flux.fromIterable(getOrBuildTimezoneMap().values());
@@ -203,7 +206,7 @@ public class TimezoneService
         try
         {
             DateTimeZone zone = DateTimeZone.forID(tzId);
-            DateTimeFormatter format = DateTimeFormat.mediumDateTime();
+            DateTimeFormatter format = DateTimeFormat.mediumDateTime().withZone(zone);
 
             long current = System.currentTimeMillis();
             long next = zone.nextTransition(current);
