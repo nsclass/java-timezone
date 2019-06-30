@@ -9,12 +9,7 @@ The following CURL command will display timezone information in current JDK.
 curl http://localhost:8080/timezone
 ```
 
-The following CURL will return all availabe Java timezone ID in current JDK
-```
-curl http://localhost:8080/timezoneIds
-```
-
-Output example
+Timezone info example
 ```
 [
     {
@@ -49,6 +44,13 @@ Output example
     }
 ]
 ```
+
+
+The following CURL will return all availabe Java timezone ID in current JDK
+```
+curl http://localhost:8080/timezoneIds
+```
+
 
 Timezone id example
 ```$xslt
