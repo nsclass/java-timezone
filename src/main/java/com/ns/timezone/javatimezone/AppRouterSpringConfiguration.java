@@ -32,8 +32,8 @@ public class AppRouterSpringConfiguration
             })
             .andRoute(RequestPredicates.GET("/timezoneIds"), request ->
             {
-                Flux<String> flux = timezoneService.getAllTimezoneIds().map(str -> str + ", ");
-                return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromPublisher(flux, String.class));
+                Flux<TimezoneService.TimezoneId> flux = timezoneService.getAllTimezoneIds().map(TimezoneService.TimezoneId::new);
+                return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromPublisher(flux, TimezoneService.TimezoneId.class));
             });
     }
 }

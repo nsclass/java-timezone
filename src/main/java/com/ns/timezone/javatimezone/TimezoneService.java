@@ -114,6 +114,23 @@ public class TimezoneService
         }
     }
 
+    public static class TimezoneId
+    {
+        private String timezoneId;
+
+        public TimezoneId(String timezoneId) {
+            this.timezoneId = timezoneId;
+        }
+
+        public String getTimezoneId() {
+            return timezoneId;
+        }
+
+        public void setTimezoneId(String timezoneId) {
+            this.timezoneId = timezoneId;
+        }
+    }
+
     public static class TimezoneDisplayInfo
     {
         private String zoneId;
