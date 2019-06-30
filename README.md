@@ -49,3 +49,15 @@ Output example
     }
 ]
 ```
+
+Timezone id example
+```$xslt
+[
+    {
+        "timezoneId": "US/Pacific"
+    },
+    {
+        "timezoneId": "Europe/Monaco"
+    }
+]
+```
